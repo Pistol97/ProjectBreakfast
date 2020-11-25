@@ -1,0 +1,11 @@
+{
+	"files.exclude": {
+		"D:/UE4/ProjectBreakfast/.git": true,
+		"D:/UE4/ProjectBreakfast/.vs": true,
+		"D:/UE4/ProjectBreakfast/.vscode": true,
+		"D:/UE4/ProjectBreakfast/Content": true,
+		"D:/UE4/ProjectBreakfast/DerivedDataCache": true,
+		"D:/UE4/ProjectBreakfast/Intermediate": true,
+		"D:/UE4/ProjectBreakfast/Saved": true
+	}
+}
