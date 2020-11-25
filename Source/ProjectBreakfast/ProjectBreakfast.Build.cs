@@ -8,6 +8,18 @@ public class ProjectBreakfast : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay" });
+
+		PublicDependencyModuleNames.AddRange(new string[] { 
+			"Core", 
+			"CoreUObject", 
+			"Engine", 
+			"InputCore", 
+			"HeadMountedDisplay",         
+			"AIModule",
+			"GameplayTasks",
+			"NavigationSystem"
+		});
+
+		//BuildConfiguration.bUseUnityBuild = false;
 	}
 }
