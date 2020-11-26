@@ -26,9 +26,9 @@ EBTNodeResult::Type UFindRandomLocation::ExecuteTask(UBehaviorTreeComponent& own
 	// 네비게이션 시스템을 가져와 NavMesh에 랜덤 위치 생성
 	UNavigationSystemV1* const nav_sys = UNavigationSystemV1::GetCurrent(GetWorld());
 	FNavLocation loc;
+
 	if (nav_sys->GetRandomPointInNavigableRadius(origin, search_radius, loc, nullptr))
 	{
-
 		cont->get_blackboard()->SetValueAsVector(GetSelectedBlackboardKey(), loc.Location);
 	}
 
