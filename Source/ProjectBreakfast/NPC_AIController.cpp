@@ -6,7 +6,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "UObject/ConstructorHelpers.h"
-#include "ProjectBreakfastCharacter.h"
+#include "MyCharacter.h"
 
 #include "Perception/AISenseConfig_Sight.h"
 //#include "Perception/AISenseConfig_Hearing.h"
@@ -57,7 +57,9 @@ void ANPC_AIController::on_updated(TArray<AActor*> const& updated_actors)
 
 void ANPC_AIController::on_target_detected(AActor* actor, FAIStimulus const stimulus)
 {
-	if (auto const ch = Cast<AProjectBreakfastCharacter>(actor))
+	//APawn* playerpawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+	if (auto const ch = Cast<AMyCharacter>(actor))
 	{
 		get_blackboard()->SetValueAsBool(bb_keys::can_see_player, stimulus.WasSuccessfullySensed());
 	}
@@ -77,10 +79,8 @@ void ANPC_AIController::setup_perception_system()
 	sight_config->DetectionByAffiliation.bDetectFriendlies = true;
 	sight_config->DetectionByAffiliation.bDetectNeutrals = true;
 	
-
 	// 인식에 시각 요소 추가
 	GetPerceptionComponent()->SetDominantSense(*sight_config->GetSenseImplementation());
 	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &ANPC_AIController::on_target_detected);
 	GetPerceptionComponent()->ConfigureSense(*sight_config);
-	
 }
