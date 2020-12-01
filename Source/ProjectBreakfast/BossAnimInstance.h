@@ -15,12 +15,10 @@ class PROJECTBREAKFAST_API UBossAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 public:
+	UBossAnimInstance();
 	void PlayPrimaryAttackMontage();
-	void PlayClusterAttackMontage();
-	void PlayultimateAttackMontage();
 
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "variable", meta = (AllowPrivateAccess = "true"))
-		float speed;
-	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+		UAnimMontage* primary_Attack;
 };

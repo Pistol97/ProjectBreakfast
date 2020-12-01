@@ -21,8 +21,11 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	APawn *PlayerPawn;
+	UPROPERTY(EditAnywhere)
+		class UBehaviorTree* AIBehavior;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "variable", meta = (AllowPrivateAccess = "true"))
 		float playerAcceptanceDistance;
+
+
 };
