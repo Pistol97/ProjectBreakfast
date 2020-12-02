@@ -46,19 +46,20 @@ AZinx::AZinx()
 		GetMesh()->SetAnimInstanceClass(kZinxAnimation.Class);
 	}
 #pragma endregion
-
+#pragma region Camera View Spectrum
 	spring_arm_->bUsePawnControlRotation = true;
 	spring_arm_->bInheritPitch = false;
 	spring_arm_->bInheritRoll = false;
 	spring_arm_->bInheritYaw = true;
 	spring_arm_->bDoCollisionTest = true;
 	bUseControllerRotationYaw = true;
-	camera_->SetRelativeLocationAndRotation(FVector(220.0f, 70.0f, 20.0f)
+	camera_->SetRelativeLocationAndRotation(FVector(220.0f, -70.0f, 20.0f)
 		, FRotator(10.0f, 0.0f, 0.0f));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
+#pragma endregion
 }
 
 void AZinx::BeginPlay()
