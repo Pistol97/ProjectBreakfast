@@ -38,10 +38,30 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	// Input Feedback for Zinx Transform
 	void MoveVertical(float input_value);
 	void MoveHorizontal(float input_value);
 	void RotatePitch(float input_value);
 	void RotateYaw(float input_value);
+
+	// Input Feedback for Game's View Space
+	void ViewChange();
+private:
+	enum class EControlMode
+	{
+		kGta,
+		kDiablo
+	};
+
+	void SetControlMode(EControlMode new_control_mode);
+
+	EControlMode current_control_mode_;
+	FVector direction_to_move_;
+	FRotator arm_rotation_to_;
+
+	float arm_length_to_;
+	float arm_length_speed_;
+	float arm_rotation_speed_;
 };
 
 USpringArmComponent* AZinx::GetSpringArm() const
