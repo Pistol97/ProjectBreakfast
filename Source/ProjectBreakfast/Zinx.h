@@ -46,19 +46,12 @@ private:
 
 	// Input Feedback for Game's View Space
 	void ViewChange();
+
 private:
-	enum class EControlMode
-	{
-		kGta,
-		kDiablo
-	};
-
-	void SetControlMode(EControlMode new_control_mode);
-
-	EControlMode current_control_mode_;
 	FVector direction_to_move_;
 	FRotator arm_rotation_to_;
 
+	bool is_invoke_past_;
 	float arm_length_to_;
 	float arm_length_speed_;
 	float arm_rotation_speed_;
