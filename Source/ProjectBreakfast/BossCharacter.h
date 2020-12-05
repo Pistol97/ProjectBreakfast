@@ -16,6 +16,7 @@ public:
 	ABossCharacter();
 
 	void PrimaryAttack();
+	void ClusterAttack();
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,11 +29,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	UPROPERTY(EditDefaultsOnly , BlueprintReadWrite, Category = Muzzle, Meta = (AllowPrivateAccess = true))
-		UParticleSystem* muzzle_Primary;
-	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Projectile, Meta = (AllowPrivateAccess = true))
 		TSubclassOf<class ABossProjectile> projectile_Primary;
-
 
 };

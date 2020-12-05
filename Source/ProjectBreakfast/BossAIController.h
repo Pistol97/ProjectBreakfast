@@ -24,8 +24,4 @@ private:
 	UPROPERTY(EditAnywhere)
 		class UBehaviorTree* AIBehavior;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "variable", meta = (AllowPrivateAccess = "true"))
-		float playerAcceptanceDistance;
-
-
 };

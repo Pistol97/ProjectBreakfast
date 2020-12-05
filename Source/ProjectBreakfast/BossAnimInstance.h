@@ -17,8 +17,13 @@ class PROJECTBREAKFAST_API UBossAnimInstance : public UAnimInstance
 public:
 	UBossAnimInstance();
 	void PlayPrimaryAttackMontage();
+	void PlayClusterAttackMontage();
 
 private:
+	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		UAnimMontage* primary_Attack;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+		UAnimMontage* cluster_Attack;
 };

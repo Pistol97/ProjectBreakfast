@@ -16,20 +16,18 @@ ABossCharacter::ABossCharacter()
 
 void ABossCharacter::PrimaryAttack()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Boss Primary Attack"));
+	FVector primaryPos = GetMesh()->GetSocketLocation("Muzzle_01");
+	FRotator primaryRot = GetMesh()->GetSocketRotation("Muzzle_01");
 
 	auto Animinstance = Cast<UBossAnimInstance>(GetMesh()->GetAnimInstance());
 	if (Animinstance != NULL)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Success Fire Primary Attack"));
+		UE_LOG(LogTemp, Warning, TEXT("Boss Primary Attack"));
 
 		//애니메이션 재생
 		Animinstance->PlayPrimaryAttackMontage();
-
-		//총구 앞 소켓에서 파티클 재생
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), muzzle_Primary, GetMesh()->GetSocketLocation("Muzzle_01"));
 		
-		ABossProjectile* projectile_primary = GetWorld()->SpawnActor<ABossProjectile>(projectile_Primary, GetMesh()->GetSocketLocation("Muzzle_01"), GetMesh()->GetSocketRotation("Muzzle_01"));
+		ABossProjectile* projectile_primary = GetWorld()->SpawnActor<ABossProjectile>(projectile_Primary, primaryPos, primaryRot);
 		
 		if (projectile_primary)
 		{
@@ -37,6 +35,22 @@ void ABossCharacter::PrimaryAttack()
 			FVector direction = GetMesh()->GetSocketRotation("Muzzle_01").Vector();
 			projectile_primary->FireInDirection(direction);
 		}
+	}
+}
+
+void ABossCharacter::ClusterAttack()
+{
+	FVector clusterPos = GetMesh()->GetSocketLocation("Muzzle_04");
+	FRotator clusterRot = GetMesh()->GetSocketRotation("Muzzle_04");
+
+
+	auto Animinstance = Cast<UBossAnimInstance>(GetMesh()->GetAnimInstance());
+	if (Animinstance != NULL)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Boss Cluster Attack"));
+
+		//애니메이션 재생
+		Animinstance->PlayClusterAttackMontage();
 	}
 }
 
