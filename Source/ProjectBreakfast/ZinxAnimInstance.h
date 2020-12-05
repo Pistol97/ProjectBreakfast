@@ -20,11 +20,17 @@ class PROJECTBREAKFAST_API UZinxAnimInstance : public UAnimInstance
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn,
 		Meta = (AllowPrivateAccess = true))
 	bool is_jump_;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack,
+		Meta = (AllowPrivateAccess = true))
+	UAnimMontage* attack_montage_;
 
 public:
+	// Constructor
 	UZinxAnimInstance();
 
-public:
+	// UAnimInstance Method Overriding
 	virtual void NativeUpdateAnimation(float delta_seconds) override;
 
+	// Custom Anim Method
+	void PlayAttackMontage();
 };

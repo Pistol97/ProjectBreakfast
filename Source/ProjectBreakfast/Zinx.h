@@ -16,23 +16,31 @@ class PROJECTBREAKFAST_API AZinx : public ACharacter
 	USpringArmComponent* spring_arm_;
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	UCameraComponent* camera_;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack,
+		Meta = (AllowPrivateAccess = true))
+	bool is_attacking_;
+	UPROPERTY()
+	class UZinxAnimInstance* zinx_anim_;
 
 public:
 	// Sets default values for this character's properties
 	AZinx();
 
+	// Built-in Overriding Method
+	virtual void Tick(float DeltaTime) override;
+	virtual void PostInitializeComponents() override;
+
+	// Component Property
+	inline USpringArmComponent* GetSpringArm() const;
+	inline UCameraComponent* GetCamera() const;
+
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* montage, bool is_interrupted);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	inline USpringArmComponent* GetSpringArm() const;
-	inline UCameraComponent* GetCamera() const;
-
-protected:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -44,14 +52,17 @@ private:
 	void RotateYaw(float input_value);
 	void Fire();
 
-private:
+	// Related to Projection
 	FVector direction_to_move_;
 	FRotator arm_rotation_to_;
-
 	bool is_invoke_past_;
-	float arm_length_to_;
-	float arm_length_speed_;
-	float arm_rotation_speed_;
+	const float arm_length_to_ = 100.0f;
+	const float arm_length_speed_ = 3.0f;
+	const float arm_rotation_speed_ = 10.0f;
+
+	// Zinx Private Value
+	const float kJumpMagnitude = 300.0f;
+
 };
 
 USpringArmComponent* AZinx::GetSpringArm() const

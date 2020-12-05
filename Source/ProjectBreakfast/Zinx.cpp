@@ -1,13 +1,12 @@
 #include "Zinx.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "ZinxAnimInstance.h"
 
 AZinx::AZinx()
 	: direction_to_move_(FVector::ZeroVector)
-	, arm_rotation_speed_(10.0f)
-	, arm_length_speed_(3.0f)
-	, arm_length_to_(100.0f)
 	, arm_rotation_to_(FRotator::ZeroRotator)
 	, is_invoke_past_(false)
+	, is_attacking_(false)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -35,18 +34,19 @@ AZinx::AZinx()
 	}
 #pragma endregion
 #pragma region Set Animation for Zinx
+	// Initialize AnimBP to Zinx
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>
 		kZinxAnimation(TEXT(
-			"AnimBlueprint'/Game/ParagonZinx/Characters/Heroes/Zinx/Zinx_AnimBlueprint.Zinx_AnimBlueprint_C'"
+			"AnimBlueprint'/Game/develop_seunghoon/Anim/Custom_Zinx_Anim_BP.Custom_Zinx_Anim_BP_C'"
 		));
 	if (kZinxAnimation.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(kZinxAnimation.Class);
 	}
 #pragma endregion
-#pragma region Set Camera View Spectrum
+#pragma region Set Projection Value
 	spring_arm_->bUsePawnControlRotation = true;
 	spring_arm_->bInheritPitch = false;
 	spring_arm_->bInheritRoll = false;
@@ -60,7 +60,7 @@ AZinx::AZinx()
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
 #pragma endregion
-	GetCharacterMovement()->JumpZVelocity = 400.0f;
+	GetCharacterMovement()->JumpZVelocity = kJumpMagnitude;
 }
 
 void AZinx::BeginPlay()
@@ -71,6 +71,18 @@ void AZinx::BeginPlay()
 void AZinx::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AZinx::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	zinx_anim_ = Cast<UZinxAnimInstance>(GetMesh()->GetAnimInstance());
+	if (zinx_anim_ == nullptr)
+	{
+		return;
+	}
+	zinx_anim_->OnMontageEnded.AddDynamic(this, &AZinx::OnAttackMontageEnded);
 }
 
 void AZinx::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -133,7 +145,17 @@ void AZinx::RotateYaw(float input_value)
 
 void AZinx::Fire()
 {
+	if (is_attacking_)
+	{
+		return;
+	}
 
+	zinx_anim_->PlayAttackMontage();
+	is_attacking_ = true;
+}
+
+void AZinx::OnAttackMontageEnded(UAnimMontage* montage, bool is_interrupted)
+{
+	is_attacking_ = false;
 }
 #pragma endregion
-
