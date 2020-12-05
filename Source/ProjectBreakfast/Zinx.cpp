@@ -39,14 +39,14 @@ AZinx::AZinx()
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>
 		kZinxAnimation(TEXT(
-			"AnimBlueprint'/Game/ParagonZinx/Characters/Heroes/Zinx/Zinx_AnimBlueprint.Zinx_AnimBlueprint_C'"
+			"AnimBlueprint'/Game/develop_seunghoon/Anim/ZinxAnimBP.ZinxAnimBP_C'"
 		));
 	if (kZinxAnimation.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(kZinxAnimation.Class);
 	}
 #pragma endregion
-#pragma region Camera View Spectrum
+#pragma region Set Camera View Spectrum
 	spring_arm_->bUsePawnControlRotation = true;
 	spring_arm_->bInheritPitch = false;
 	spring_arm_->bInheritRoll = false;
@@ -60,6 +60,7 @@ AZinx::AZinx()
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
 #pragma endregion
+	GetCharacterMovement()->JumpZVelocity = 800.0f;
 }
 
 void AZinx::BeginPlay()
@@ -77,6 +78,8 @@ void AZinx::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	// Process Project's Actions for Zinx's Action
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed,
+		this, &AZinx::Jump);
 
 	// Process Project's Axis for Zinx's Transform
 	// D: Move Right	(¡æ)
