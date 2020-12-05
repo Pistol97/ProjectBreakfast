@@ -37,14 +37,12 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	// Input Feedback for Zinx Transform
-	void MoveVertical(float input_value);
+	// Input Feedback for Zinx
+	void MoveForward(float input_value);
 	void MoveHorizontal(float input_value);
 	void RotatePitch(float input_value);
 	void RotateYaw(float input_value);
-
-	// Input Feedback for Game's View Space
-	void ViewChange();
+	void Fire();
 
 private:
 	FVector direction_to_move_;

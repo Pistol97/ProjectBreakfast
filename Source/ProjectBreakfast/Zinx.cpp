@@ -39,7 +39,7 @@ AZinx::AZinx()
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>
 		kZinxAnimation(TEXT(
-			"AnimBlueprint'/Game/develop_seunghoon/Anim/ZinxAnimBP.ZinxAnimBP_C'"
+			"AnimBlueprint'/Game/ParagonZinx/Characters/Heroes/Zinx/Zinx_AnimBlueprint.Zinx_AnimBlueprint_C'"
 		));
 	if (kZinxAnimation.Succeeded())
 	{
@@ -53,14 +53,14 @@ AZinx::AZinx()
 	spring_arm_->bInheritYaw = true;
 	spring_arm_->bDoCollisionTest = true;
 	bUseControllerRotationYaw = true;
-	camera_->SetRelativeLocationAndRotation(FVector(220.0f, -70.0f, 20.0f)
+	camera_->SetRelativeLocationAndRotation(FVector(220.0f, 70.0f, 20.0f)
 		, FRotator(10.0f, 0.0f, 0.0f));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
 #pragma endregion
-	GetCharacterMovement()->JumpZVelocity = 800.0f;
+	GetCharacterMovement()->JumpZVelocity = 400.0f;
 }
 
 void AZinx::BeginPlay()
@@ -80,6 +80,8 @@ void AZinx::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	// Process Project's Actions for Zinx's Action
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed,
 		this, &AZinx::Jump);
+	PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed,
+		this, &AZinx::Fire);
 
 	// Process Project's Axis for Zinx's Transform
 	// D: Move Right	(¡æ)
@@ -88,23 +90,35 @@ void AZinx::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	// S: Move Backward (¡é)
 	// Drag X Axis in Mouse: Rotate Zinx with Yaw
 	// Drag Y Axis in Mouse: Rotate Zinx with Pitch
-	PlayerInputComponent->BindAxis(TEXT("MoveVerticalAxis"), this, &AZinx::MoveVertical);
+	PlayerInputComponent->BindAxis(TEXT("MoveVerticalAxis"), this, &AZinx::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("MoveHorizontalAxis"), this, &AZinx::MoveHorizontal);
 	PlayerInputComponent->BindAxis(TEXT("RotatePitch"), this, &AZinx::RotatePitch);
 	PlayerInputComponent->BindAxis(TEXT("RotateYaw"), this, &AZinx::RotateYaw);
 }
 
 #pragma region Input Event 
-void AZinx::MoveVertical(float input_value)
+void AZinx::MoveForward(float input_value)
 {
-	AddMovementInput(FRotationMatrix
-	(GetControlRotation()).GetUnitAxis(EAxis::X), input_value);
+	if ((Controller) && (input_value != 0.0f))
+	{
+		const FRotator kRotation = Controller->GetControlRotation();
+		const FRotator kYawRotation(0, kRotation.Yaw, 0);
+
+		const FVector kDirection = FRotationMatrix(kYawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(kDirection, input_value);
+	}
 }
 
 void AZinx::MoveHorizontal(float input_value)
 {
-	AddMovementInput(FRotationMatrix
-	(GetControlRotation()).GetUnitAxis(EAxis::Y), input_value);
+	if ((Controller) && (input_value != 0.0f))
+	{
+		const FRotator kRotation = Controller->GetControlRotation();
+		const FRotator kYawRotation(0, kRotation.Yaw, 0);
+
+		const FVector kDirection = FRotationMatrix(kYawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(kDirection, input_value);
+	}
 }
 
 void AZinx::RotatePitch(float input_value)
@@ -116,4 +130,10 @@ void AZinx::RotateYaw(float input_value)
 {
 	AddControllerYawInput(input_value);
 }
+
+void AZinx::Fire()
+{
+
+}
 #pragma endregion
+
