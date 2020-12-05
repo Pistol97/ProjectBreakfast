@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include <iostream>
 
 #include "BossCharacter.h"
 #include "BossAnimInstance.h"
@@ -32,18 +32,13 @@ void ABossCharacter::PrimaryAttack()
 		if (projectile_primary)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Projectile in air"));
-			FVector direction = GetMesh()->GetSocketRotation("Muzzle_01").Vector();
-			projectile_primary->FireInDirection(direction);
+			projectile_primary->FireInDirection(primaryRot.Vector());
 		}
 	}
 }
 
 void ABossCharacter::ClusterAttack()
 {
-	FVector clusterPos = GetMesh()->GetSocketLocation("Muzzle_04");
-	FRotator clusterRot = GetMesh()->GetSocketRotation("Muzzle_04");
-
-
 	auto Animinstance = Cast<UBossAnimInstance>(GetMesh()->GetAnimInstance());
 	if (Animinstance != NULL)
 	{
@@ -51,6 +46,32 @@ void ABossCharacter::ClusterAttack()
 
 		//애니메이션 재생
 		Animinstance->PlayClusterAttackMontage();
+	}
+}
+
+void ABossCharacter::FireCluster()
+{
+	FVector clusterPos = GetMesh()->GetSocketLocation("Muzzle_04");
+
+	srand((unsigned int)time(0));
+
+	for (int i = 0; i < 5; i++)
+	{
+		float randomFirePos = rand() % (95 + 1 - 15) + 15;
+
+		//뒤로나가는 문제가 발생함
+		randomFirePos += 180.0f;
+
+		FRotator clusterRot = GetMesh()->GetSocketRotation("Muzzle_04");
+		clusterRot = FRotator(clusterRot.Pitch, clusterRot.Yaw + randomFirePos, clusterRot.Roll);
+
+		ABossProjectile* projectile_cluster = GetWorld()->SpawnActor<ABossProjectile>(projectile_Cluster, clusterPos, clusterRot);
+
+		if (projectile_cluster)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Cluster in air"));
+			projectile_cluster->FireInDirection(clusterRot.Vector());
+		}
 	}
 }
 

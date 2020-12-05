@@ -16,7 +16,11 @@ public:
 	ABossCharacter();
 
 	void PrimaryAttack();
+
 	void ClusterAttack();
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+		void FireCluster();
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,5 +35,8 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Projectile, Meta = (AllowPrivateAccess = true))
 		TSubclassOf<class ABossProjectile> projectile_Primary;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Projectile, Meta = (AllowPrivateAccess = true))
+		TSubclassOf<class ABossProjectile> projectile_Cluster;
 
 };
