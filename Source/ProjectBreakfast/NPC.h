@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "PatrolPath.h"
+#include "Animation/AnimMontage.h"
 #include "NPC.generated.h"
 
 UCLASS()
@@ -24,6 +25,10 @@ public:
 	
 	APatrolPath* get_patrol_path();
 
+	void melee_attack();
+
+	UAnimMontage* get_montage() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,4 +36,7 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 		APatrolPath* patrol_path;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
+		UAnimMontage* montage;
 };

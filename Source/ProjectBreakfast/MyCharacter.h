@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Animation/AnimMontage.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -29,8 +30,13 @@ public:
 
 private:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
+		UAnimMontage* montage;
+
 	class UAIPerceptionStimuliSourceComponent* stimulus;
 
 	void setup_stimulus();
+
+	void on_attack();
 
 };

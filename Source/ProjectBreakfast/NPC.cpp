@@ -24,6 +24,11 @@ ANPC::ANPC()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
+UAnimMontage* ANPC::get_montage() const
+{
+	return montage;
+}
+
 // Called when the game starts or when spawned
 void ANPC::BeginPlay()
 {
@@ -48,4 +53,12 @@ void ANPC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 APatrolPath* ANPC::get_patrol_path()
 {
 	return patrol_path;
+}
+
+void ANPC::melee_attack()
+{
+	if (montage)
+	{
+		PlayAnimMontage(montage);
+	}
 }

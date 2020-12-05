@@ -6,7 +6,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "NPC.h"
 #include "blackboard_keys.h"
-//#include <cmath>
+#include <cmath>
 
 UIncrementPathIndex::UIncrementPathIndex(FObjectInitializer const& object_initializer)
 {
@@ -24,8 +24,8 @@ EBTNodeResult::Type UIncrementPathIndex::ExecuteTask(UBehaviorTreeComponent& own
 
 	// get set
 	int index = controller->get_blackboard()->GetValueAsInt(bb_keys::patrol_path_index);
-//	if (bidirectional)
-//	{
+	if (bidirectional)
+	{
 		if (index >= max_index && direction == EDirectionType::Forward)
 		{
 			direction = EDirectionType::Reverse;
@@ -34,8 +34,8 @@ EBTNodeResult::Type UIncrementPathIndex::ExecuteTask(UBehaviorTreeComponent& own
 		{
 			direction = EDirectionType::Forward;
 		}
-//	}
-		//앞으로 가는 중이면 인덱스 늘리기, 아니면 줄이기
+	}
+	//앞으로 가는 중이면 인덱스 늘리기, 아니면 줄이기
 	controller->get_blackboard()->SetValueAsInt(bb_keys::patrol_path_index,
 		(direction == EDirectionType::Forward ? std::abs(++index) : std::abs(--index)) % no_of_points);
 

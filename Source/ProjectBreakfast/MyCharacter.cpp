@@ -41,6 +41,14 @@ void AMyCharacter::setup_stimulus()
 	stimulus->RegisterWithPerceptionSystem();
 }
 
+void AMyCharacter::on_attack()
+{
+	if (montage)
+	{
+		PlayAnimMontage(montage);
+	}
+}
+
 // Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
 {
@@ -60,5 +68,6 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMyCharacter::on_attack);
 }
 

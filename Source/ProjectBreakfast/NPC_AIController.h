@@ -30,10 +30,6 @@ private:
 
 
 
-
-
-
-
 	class UAISenseConfig_Sight* sight_config;
 
 	//class UAISenseConfig_Hearing* hearing_config;
