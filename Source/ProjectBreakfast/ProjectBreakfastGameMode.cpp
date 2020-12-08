@@ -1,8 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ProjectBreakfastGameMode.h"
-#include "ProjectBreakfastHUD.h"
-#include "ProjectBreakfastCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AProjectBreakfastGameMode::AProjectBreakfastGameMode()
@@ -13,7 +11,4 @@ AProjectBreakfastGameMode::AProjectBreakfastGameMode()
 	"/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter"
 	));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
-
-	// use our custom HUD class
-	HUDClass = AProjectBreakfastHUD::StaticClass();
 }

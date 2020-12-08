@@ -53,11 +53,9 @@ void ABossCharacter::FireCluster()
 {
 	FVector clusterPos = GetMesh()->GetSocketLocation("Muzzle_04");
 
-	srand((unsigned int)time(0));
-
 	for (int i = 0; i < 5; i++)
 	{
-		float randomFirePos = rand() % (95 + 1 - 15) + 15;
+		float randomFirePos = FMath::RandRange(15, 95);
 
 		//뒤로나가는 문제가 발생함
 		randomFirePos += 180.0f;
