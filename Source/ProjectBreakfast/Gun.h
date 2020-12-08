@@ -21,6 +21,8 @@ class PROJECTBREAKFAST_API AGun : public AActor
 	UParticleSystem* impact_effect_;
 	UPROPERTY(EditAnywhere)
 	float max_range_ = 1000.0f;
+	UPROPERTY(EditAnywhere)
+	float damage_ = 10.0f;
 
 public:	
 	// Sets default values for this actor's properties
