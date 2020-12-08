@@ -20,7 +20,7 @@ class PROJECTBREAKFAST_API AGun : public AActor
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* impact_effect_;
 	UPROPERTY(EditAnywhere)
-	float max_range_ = 1000.0f;
+	float max_range_ = 10000.0f;
 	UPROPERTY(EditAnywhere)
 	float damage_ = 10.0f;
 
