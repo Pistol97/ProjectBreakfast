@@ -1,15 +1,17 @@
 #include "Zinx.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "ZinxAnimInstance.h"
+#include "DrawDebugHelpers.h"
+#include "Gun.h"
 
 AZinx::AZinx()
 	: direction_to_move_(FVector::ZeroVector)
 	, arm_rotation_to_(FRotator::ZeroRotator)
-	, is_invoke_past_(false)
-	, is_attacking_(false)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	is_invoke_past_ = false;
+	is_attacking_ = false;
 
 #pragma region Initialize Component on Zinx
 	spring_arm_ = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
@@ -20,8 +22,9 @@ AZinx::AZinx()
 
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -88.f),
 		FRotator(0.f, -90.f, 0.f));
-	spring_arm_->TargetArmLength = 400.f;
-	spring_arm_->SetRelativeRotation(FRotator(-25.f, 0.f, 0.f));
+	spring_arm_->TargetArmLength = 200.f;
+	spring_arm_->SetRelativeLocation(FVector(0.0f, 40.0f, 70.0f));
+	spring_arm_->SocketOffset = FVector(0.0f, 60.0f, 0.0f);
 #pragma endregion
 #pragma region Set Mesh Skeleton For Zinx
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
@@ -48,13 +51,13 @@ AZinx::AZinx()
 #pragma endregion
 #pragma region Set Projection Value
 	spring_arm_->bUsePawnControlRotation = true;
-	spring_arm_->bInheritPitch = false;
+	spring_arm_->bInheritPitch = true;
 	spring_arm_->bInheritRoll = false;
 	spring_arm_->bInheritYaw = true;
 	spring_arm_->bDoCollisionTest = true;
 	bUseControllerRotationYaw = true;
-	camera_->SetRelativeLocationAndRotation(FVector(220.0f, 70.0f, 20.0f)
-		, FRotator(10.0f, 0.0f, 0.0f));
+	camera_->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, 0.0f)
+		, FRotator(0.0f, -10.0f, 0.0f));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
@@ -66,6 +69,11 @@ AZinx::AZinx()
 void AZinx::BeginPlay()
 {
 	Super::BeginPlay();
+
+	gun_ = GetWorld()->SpawnActor<AGun>(gun_class_);
+	gun_->SetOwner(this);
+	gun_->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform,
+		TEXT("pivot_r"));
 }
 
 void AZinx::Tick(float DeltaTime)
@@ -104,8 +112,8 @@ void AZinx::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	// Drag Y Axis in Mouse: Rotate Zinx with Pitch
 	PlayerInputComponent->BindAxis(TEXT("MoveVerticalAxis"), this, &AZinx::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("MoveHorizontalAxis"), this, &AZinx::MoveHorizontal);
-	PlayerInputComponent->BindAxis(TEXT("RotatePitch"), this, &AZinx::RotatePitch);
-	PlayerInputComponent->BindAxis(TEXT("RotateYaw"), this, &AZinx::RotateYaw);
+	PlayerInputComponent->BindAxis(TEXT("RotatePitch"), this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis(TEXT("RotateYaw"), this, &APawn::AddControllerYawInput);
 }
 
 #pragma region Input Event 
@@ -133,25 +141,18 @@ void AZinx::MoveHorizontal(float input_value)
 	}
 }
 
-void AZinx::RotatePitch(float input_value)
-{
-	AddControllerPitchInput(input_value);
-}
-
-void AZinx::RotateYaw(float input_value)
-{
-	AddControllerYawInput(input_value);
-}
-
 void AZinx::Fire()
 {
 	if (is_attacking_)
 	{
 		return;
 	}
-
-	zinx_anim_->PlayAttackMontage();
-	is_attacking_ = true;
+	else
+	{
+		zinx_anim_->PlayAttackMontage();
+		is_attacking_ = true;
+		gun_->PullTriggerEffect();
+	}
 }
 
 void AZinx::OnAttackMontageEnded(UAnimMontage* montage, bool is_interrupted)

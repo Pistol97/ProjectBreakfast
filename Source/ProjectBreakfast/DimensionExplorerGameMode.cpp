@@ -7,7 +7,6 @@
 
 ADimensionExplorerGameMode::ADimensionExplorerGameMode()
 {
-	DefaultPawnClass = AZinx::StaticClass();
 	PlayerControllerClass = AZinxController::StaticClass();
 }
 

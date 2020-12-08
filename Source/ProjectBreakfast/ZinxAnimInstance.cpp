@@ -33,5 +33,8 @@ void UZinxAnimInstance::NativeUpdateAnimation(float delta_seconds)
 
 void UZinxAnimInstance::PlayAttackMontage()
 {
-	Montage_Play(attack_montage_, 1.0f);	
+	if (!Montage_IsPlaying(attack_montage_))
+	{
+		Montage_Play(attack_montage_, 1.0f);
+	}
 }

@@ -7,6 +7,9 @@
 #include "Engine/Classes/Camera/CameraComponent.h"
 #include "Zinx.generated.h"
 
+class UDamageType;
+class AGun;
+
 UCLASS()
 class PROJECTBREAKFAST_API AZinx : public ACharacter
 {
@@ -21,6 +24,10 @@ class PROJECTBREAKFAST_API AZinx : public ACharacter
 	bool is_attacking_;
 	UPROPERTY()
 	class UZinxAnimInstance* zinx_anim_;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AGun> gun_class_;
+	UPROPERTY()
+	AGun* gun_;
 
 public:
 	// Sets default values for this character's properties
@@ -30,7 +37,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void PostInitializeComponents() override;
 
-	// Component Property
+	// Component Property 
 	inline USpringArmComponent* GetSpringArm() const;
 	inline UCameraComponent* GetCamera() const;
 
@@ -48,8 +55,6 @@ private:
 	// Input Feedback for Zinx
 	void MoveForward(float input_value);
 	void MoveHorizontal(float input_value);
-	void RotatePitch(float input_value);
-	void RotateYaw(float input_value);
 	void Fire();
 
 	// Related to Projection
@@ -63,6 +68,9 @@ private:
 	// Zinx Private Value
 	const float kJumpMagnitude = 300.0f;
 
+	// Shooter Data Variable
+	UPROPERTY(VisibleAnywhere, Category = "Shooting")
+	TSubclassOf<UDamageType> damage_type;
 };
 
 USpringArmComponent* AZinx::GetSpringArm() const
