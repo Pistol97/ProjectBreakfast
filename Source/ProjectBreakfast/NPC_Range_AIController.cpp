@@ -1,15 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "NPC_AIController.h"
+#include "NPC_Range_AIController.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "UObject/ConstructorHelpers.h"
 #include "MyCharacter.h"
 
 #include "Perception/AISenseConfig_Sight.h"
-//#include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "blackboard_keys.h"
@@ -17,9 +15,9 @@
 #include "Runtime/Engine/Classes/Engine/Engine.h"
 #include "GameFramework/Character.h"
 
-ANPC_AIController::ANPC_AIController(FObjectInitializer const& object_initializer)
+ANPC_Range_AIController::ANPC_Range_AIController(FObjectInitializer const& object_initializer)
 {
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree> obj(TEXT("BehaviorTree'/Game/AI/NPC_BT.NPC_BT'"));
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree> obj(TEXT("BehaviorTree'/Game/AI/NPC_Range_BT.NPC_Range_BT'"));
 	if (obj.Succeeded())
 	{
 		btree = obj.Object;
@@ -29,14 +27,14 @@ ANPC_AIController::ANPC_AIController(FObjectInitializer const& object_initialize
 	setup_perception_system();
 }
 
-void ANPC_AIController::BeginPlay()
+void ANPC_Range_AIController::BeginPlay()
 {
 	Super::BeginPlay();
 	RunBehaviorTree(btree);
 	behavior_tree_component->StartTree(*btree);
 }
 
-void ANPC_AIController::OnPossess(APawn* const pawn)
+void ANPC_Range_AIController::OnPossess(APawn* const pawn)
 {
 	Super::OnPossess(pawn);
 	if (blackboard)
@@ -45,17 +43,17 @@ void ANPC_AIController::OnPossess(APawn* const pawn)
 	}
 }
 
-UBlackboardComponent* ANPC_AIController::get_blackboard() const
+UBlackboardComponent* ANPC_Range_AIController::get_blackboard() const
 {
 	return blackboard;
 }
 
-void ANPC_AIController::on_updated(TArray<AActor*> const& updated_actors)
+void ANPC_Range_AIController::on_updated(TArray<AActor*> const& updated_actors)
 {
-	
+
 }
 
-void ANPC_AIController::on_target_detected(AActor* actor, FAIStimulus const stimulus)
+void ANPC_Range_AIController::on_target_detected(AActor* actor, FAIStimulus const stimulus)
 {
 	//APawn* playerpawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 
@@ -65,7 +63,7 @@ void ANPC_AIController::on_target_detected(AActor* actor, FAIStimulus const stim
 	}
 }
 
-void ANPC_AIController::setup_perception_system()
+void ANPC_Range_AIController::setup_perception_system()
 {
 	// 시각관련 객체 생성 & 초기화
 	sight_config = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
@@ -78,9 +76,9 @@ void ANPC_AIController::setup_perception_system()
 	sight_config->DetectionByAffiliation.bDetectEnemies = true;
 	sight_config->DetectionByAffiliation.bDetectFriendlies = true;
 	sight_config->DetectionByAffiliation.bDetectNeutrals = true;
-	
+
 	// 인식에 시각 요소 추가
 	GetPerceptionComponent()->SetDominantSense(*sight_config->GetSenseImplementation());
-	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &ANPC_AIController::on_target_detected);
+	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &ANPC_Range_AIController::on_target_detected);
 	GetPerceptionComponent()->ConfigureSense(*sight_config);
 }

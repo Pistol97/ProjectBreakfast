@@ -5,20 +5,21 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Perception/AIPerceptionTypes.h"
-#include "NPC_AIController.generated.h"
+#include "NPC_Range_AIController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTBREAKFAST_API ANPC_AIController : public AAIController
+class PROJECTBREAKFAST_API ANPC_Range_AIController : public AAIController
 {
 	GENERATED_BODY()
 public:
-	ANPC_AIController(FObjectInitializer const& object_initializer = FObjectInitializer::Get());
+	ANPC_Range_AIController(FObjectInitializer const& object_initializer = FObjectInitializer::Get());
 	void BeginPlay() override;
 	void OnPossess(APawn* const pawn) override;
 	class UBlackboardComponent* get_blackboard() const;
+
 private:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 		class UBehaviorTreeComponent* behavior_tree_component;
@@ -30,13 +31,11 @@ private:
 
 	class UAISenseConfig_Sight* sight_config;
 
-	//class UAISenseConfig_Hearing* hearing_config;
+	UFUNCTION()
+		void on_updated(TArray<AActor*> const& updated_actors);
 
 	UFUNCTION()
-	void on_updated(TArray<AActor*> const& updated_actors);
-
-	UFUNCTION()
-	void on_target_detected(AActor* actor, FAIStimulus const stimulus);
+		void on_target_detected(AActor* actor, FAIStimulus const stimulus);
 
 	void setup_perception_system();
 };
