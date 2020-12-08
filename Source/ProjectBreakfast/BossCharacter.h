@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "BossCharacter.generated.h"
 
+class UBossAnimInstance;
+
 UCLASS()
 class PROJECTBREAKFAST_API ABossCharacter : public ACharacter
 {
@@ -21,6 +23,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 		void FireCluster();
+
+	void UltimateAttack();
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+		void FireLaserBeam();
 
 protected:
 	// Called when the game starts or when spawned
@@ -39,4 +46,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Projectile, Meta = (AllowPrivateAccess = true))
 		TSubclassOf<class ABossProjectile> projectile_Cluster;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Projectile, Meta = (AllowPrivateAccess = true))
+		TSubclassOf<class AActor> ultimate_Laser;
+
+private:
+	UBossAnimInstance* bossAnimInstance;
 };

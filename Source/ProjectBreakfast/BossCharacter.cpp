@@ -1,17 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#include <iostream>
 
 #include "BossCharacter.h"
 #include "BossAnimInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "BossProjectile.h"
+
+#include <iostream>
 
 // Sets default values
 ABossCharacter::ABossCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 void ABossCharacter::PrimaryAttack()
@@ -19,13 +20,12 @@ void ABossCharacter::PrimaryAttack()
 	FVector primaryPos = GetMesh()->GetSocketLocation("Muzzle_01");
 	FRotator primaryRot = GetMesh()->GetSocketRotation("Muzzle_01");
 
-	auto Animinstance = Cast<UBossAnimInstance>(GetMesh()->GetAnimInstance());
-	if (Animinstance != NULL)
+	if (bossAnimInstance != NULL)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Boss Primary Attack"));
 
 		//애니메이션 재생
-		Animinstance->PlayPrimaryAttackMontage();
+		bossAnimInstance->PlayPrimaryAttackMontage();
 		
 		ABossProjectile* projectile_primary = GetWorld()->SpawnActor<ABossProjectile>(projectile_Primary, primaryPos, primaryRot);
 		
@@ -39,13 +39,13 @@ void ABossCharacter::PrimaryAttack()
 
 void ABossCharacter::ClusterAttack()
 {
-	auto Animinstance = Cast<UBossAnimInstance>(GetMesh()->GetAnimInstance());
-	if (Animinstance != NULL)
+	//auto Animinstance = Cast<UBossAnimInstance>(GetMesh()->GetAnimInstance());
+	if (bossAnimInstance != NULL)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Boss Cluster Attack"));
 
 		//애니메이션 재생
-		Animinstance->PlayClusterAttackMontage();
+		bossAnimInstance->PlayClusterAttackMontage();
 	}
 }
 
@@ -75,17 +75,53 @@ void ABossCharacter::FireCluster()
 	}
 }
 
+void ABossCharacter::UltimateAttack()
+{
+	//auto Animinstance = Cast<UBossAnimInstance>(GetMesh()->GetAnimInstance());
+	if (bossAnimInstance != NULL)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Play Boss Ultimate Attack"));
+
+		//애니메이션 재생
+		bossAnimInstance->PlayUltimateAttackMontage();
+	}
+}
+
+void ABossCharacter::FireLaserBeam()
+{	
+	FVector ultimatePos = GetMesh()->GetSocketLocation("Muzzle_04");
+	FRotator ultimateRot = GetMesh()->GetForwardVector().Rotation();
+
+	AActor* ultimate_laser = GetWorld()->SpawnActor<AActor>(ultimate_Laser, ultimatePos, ultimateRot);
+	//ultimate_laser->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), "Muzzle_04");
+}
+
 // Called when the game starts or when spawned
 void ABossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	bossAnimInstance = Cast<UBossAnimInstance>(GetMesh()->GetAnimInstance());
 }
 
 // Called every frame
 void ABossCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+	//FRotator origin = GetActorRotation();
+
+	//레이저 공격시
+	if (bossAnimInstance->Montage_IsPlaying(bossAnimInstance->GetUltimateMontage()))
+	{
+		FRotator adj = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), PlayerPawn->GetActorLocation());
+		FRotator rot = FRotator(adj.Roll, adj.Yaw - 90, 0);
+
+		//플레이어 추적
+		GetMesh()->SetWorldRotation(rot);
+	}
 
 }
 
