@@ -18,7 +18,9 @@ public:
 	UBossAnimInstance();
 	void PlayPrimaryAttackMontage();
 	void PlayClusterAttackMontage();
+	void PlayUltimateAttackMontage();
 
+	inline UAnimMontage* GetUltimateMontage() const { return ultimate_Attack; }
 private:
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
@@ -26,4 +28,8 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		UAnimMontage* cluster_Attack;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+		UAnimMontage* ultimate_Attack;
+	
 };
