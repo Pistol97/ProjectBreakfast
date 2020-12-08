@@ -1,0 +1,21 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "DimensionExplorerGameMode.h"
+#include "GameFramework/PlayerController.h"
+#include "ZinxController.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class PROJECTBREAKFAST_API AZinxController : public APlayerController
+{
+	GENERATED_BODY()
+
+protected:
+	virtual void BeginPlay() override;
+	
+};
