@@ -41,7 +41,6 @@ EBTNodeResult::Type UFindPlayerLocation::ExecuteTask(UBehaviorTreeComponent& own
 		cont->get_blackboard()->SetValueAsVector(GetSelectedBlackboardKey(), player_location);
 	}
 
-
 	// ¼º°ø
 	FinishLatentTask(owner_comp, EBTNodeResult::Succeeded);
 	return EBTNodeResult::Succeeded;

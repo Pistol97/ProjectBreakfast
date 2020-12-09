@@ -36,6 +36,18 @@ void ANPC_AIController::BeginPlay()
 	behavior_tree_component->StartTree(*btree);
 }
 
+void ANPC_AIController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	////월드 내의 플레이어 찾기
+	//APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+	////플레이어를 바라보도록
+	//SetFocus(PlayerPawn);
+
+}
+
 void ANPC_AIController::OnPossess(APawn* const pawn)
 {
 	Super::OnPossess(pawn);
@@ -62,6 +74,7 @@ void ANPC_AIController::on_target_detected(AActor* actor, FAIStimulus const stim
 	if (auto const ch = Cast<AMyCharacter>(actor))
 	{
 		get_blackboard()->SetValueAsBool(bb_keys::can_see_player, stimulus.WasSuccessfullySensed());
+
 	}
 }
 

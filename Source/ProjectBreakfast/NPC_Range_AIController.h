@@ -20,12 +20,16 @@ public:
 	void OnPossess(APawn* const pawn) override;
 	class UBlackboardComponent* get_blackboard() const;
 
+	virtual void Tick(float DeltaSeconds);
+
+	virtual FRotator GetControlRotation() const override;
+
 private:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 		class UBehaviorTreeComponent* behavior_tree_component;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
-		class UBehaviorTree* btree;
+		class UBehaviorTree* btree_range;
 
 	class UBlackboardComponent* blackboard;
 
