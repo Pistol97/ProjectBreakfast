@@ -25,7 +25,7 @@ EBTNodeResult::Type URangeAttack::ExecuteTask(UBehaviorTreeComponent& owner_comp
 		if (montage_has_finished(npc))
 		{
 			npc->range_attack();
-		}
+		};
 	}
 
 	FinishLatentTask(owner_comp, EBTNodeResult::Succeeded);

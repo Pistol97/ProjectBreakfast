@@ -9,6 +9,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Engine/Classes/Kismet/KismetMathLibrary.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "blackboard_keys.h"
 
 URotateToPlayer::URotateToPlayer(FObjectInitializer const& object_initializer)
 {
@@ -29,6 +31,12 @@ EBTNodeResult::Type URotateToPlayer::ExecuteTask(UBehaviorTreeComponent& owner_c
 		FRotator PlayerRot = UKismetMathLibrary::FindLookAtRotation(npc->GetActorLocation(), PlayerPawn->GetActorLocation());
 		
 		npc->SetActorRelativeRotation(PlayerRot);
+	}
+
+	if (!bb_keys::player_is_in_range_range)
+	{
+		ANPC_ranged* npc = Cast<ANPC_ranged>(cont->GetPawn());
+		npc->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 	}
 
 	FinishLatentTask(owner_comp, EBTNodeResult::Succeeded);
