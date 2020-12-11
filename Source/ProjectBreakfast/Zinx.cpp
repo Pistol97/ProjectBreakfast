@@ -102,6 +102,8 @@ void AZinx::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		this, &AZinx::Jump);
 	PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed,
 		this, &AZinx::Fire);
+	PlayerInputComponent->BindAction(TEXT("Skill"), EInputEvent::IE_Pressed,
+		this, &AZinx::Skill);
 
 	// Process Project's Axis for Zinx's Transform
 	// D: Move Right	(¡æ)
@@ -153,6 +155,11 @@ void AZinx::Fire()
 		is_attacking_ = true;
 		gun_->PullTriggerEffect();
 	}
+}
+
+void AZinx::Skill()
+{
+	this->CustomTimeDilation = 0.4;
 }
 
 void AZinx::OnAttackMontageEnded(UAnimMontage* montage, bool is_interrupted)

@@ -56,6 +56,7 @@ private:
 	void MoveForward(float input_value);
 	void MoveHorizontal(float input_value);
 	void Fire();
+	void Skill();
 
 	// Related to Projection
 	FVector direction_to_move_;
