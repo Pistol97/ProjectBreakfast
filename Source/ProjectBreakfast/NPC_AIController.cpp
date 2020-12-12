@@ -6,7 +6,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "UObject/ConstructorHelpers.h"
-#include "MyCharacter.h"
+#include "Zinx.h"
 
 #include "Perception/AISenseConfig_Sight.h"
 //#include "Perception/AISenseConfig_Hearing.h"
@@ -71,7 +71,7 @@ void ANPC_AIController::on_target_detected(AActor* actor, FAIStimulus const stim
 {
 	//APawn* playerpawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 
-	if (auto const ch = Cast<AMyCharacter>(actor))
+	if (auto const ch = Cast<AZinx>(actor))
 	{
 		get_blackboard()->SetValueAsBool(bb_keys::can_see_player, stimulus.WasSuccessfullySensed());
 

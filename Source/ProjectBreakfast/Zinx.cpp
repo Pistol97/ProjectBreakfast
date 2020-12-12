@@ -6,6 +6,9 @@
 #include "StopWatch.h"
 #include "Gun.h"
 
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
+
 AZinx::AZinx()
 	: direction_to_move_(FVector::ZeroVector)
 	, arm_rotation_to_(FRotator::ZeroRotator)
@@ -240,4 +243,13 @@ void AZinx::OnAttackMontageEnded(UAnimMontage* montage, bool is_interrupted)
 {
 	is_attacking_ = false;
 }
+
+/////////Garden_moster
+void AZinx::setup_stimulus()
+{
+	stimulus = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("stimulus"));
+	stimulus->RegisterForSense(TSubclassOf<UAISense_Sight>());//??
+	stimulus->RegisterWithPerceptionSystem();
+}
+
 #pragma endregion

@@ -94,6 +94,11 @@ private:
 	// Zinx Private Value
 	const float kJumpMagnitude = 300.0f;
 
+	//monster_set_stimulus
+	class UAIPerceptionStimuliSourceComponent* stimulus;
+
+	void setup_stimulus();
+
 };
 
 USpringArmComponent* AZinx::GetSpringArm() const
