@@ -76,7 +76,7 @@ private:
 	// 일반 시간 1초 = 1000ms
 	const float kStandardTimeRate = 1.0f;
 	// 아드레날린 스킬 총 시간 몇초
-	const float kAdrenalinMaxTime = 10.0f;
+	const float kAdrenalinMaxTime = 100.0f;
 	// 기본 스킬 지속시간
 	const float kDefaultSkillTime = 3.0f;
 	float left_time_ = 0.0f;
