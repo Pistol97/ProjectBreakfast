@@ -4,6 +4,7 @@
 #include "BossAnimInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "BossProjectile.h"
 
 #include <iostream>
@@ -27,6 +28,9 @@ void ABossCharacter::PrimaryAttack()
 		//애니메이션 재생
 		bossAnimInstance->PlayPrimaryAttackMontage();
 		
+		//플레이어에 맞춰 조정
+		primaryRot.Pitch -= 5.0f;
+
 		ABossProjectile* projectile_primary = GetWorld()->SpawnActor<ABossProjectile>(projectile_Primary, primaryPos, primaryRot);
 		
 		if (projectile_primary)
@@ -55,7 +59,7 @@ void ABossCharacter::FireCluster()
 
 	for (int i = 0; i < 5; i++)
 	{
-		float randomFirePos = FMath::RandRange(15, 95);
+		float randomFirePos = FMath::RandRange(20, 90);
 
 		//뒤로나가는 문제가 발생함
 		randomFirePos += 180.0f;
@@ -90,8 +94,10 @@ void ABossCharacter::FireLaserBeam()
 	FVector ultimatePos = GetMesh()->GetSocketLocation("Muzzle_04");
 	FRotator ultimateRot = GetMesh()->GetForwardVector().Rotation();
 
+	ultimateRot.Roll += 5;
+
 	AActor* ultimate_laser = GetWorld()->SpawnActor<AActor>(ultimate_Laser, ultimatePos, ultimateRot);
-	//ultimate_laser->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), "Muzzle_04");
+	ultimate_laser->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, false));
 }
 
 // Called when the game starts or when spawned
@@ -109,7 +115,8 @@ void ABossCharacter::Tick(float DeltaTime)
 
 	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 
-	//FRotator origin = GetActorRotation();
+	//플레이어 조준
+	bossAnimInstance->SetAimOffset();
 
 	//레이저 공격시
 	if (bossAnimInstance->Montage_IsPlaying(bossAnimInstance->GetUltimateMontage()))
