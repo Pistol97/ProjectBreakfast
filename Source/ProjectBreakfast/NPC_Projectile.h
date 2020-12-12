@@ -33,4 +33,8 @@ public:
 
 	// 발사체의 속도를 발사 방향으로 초기화시킵니다.
 	void FireInDirection(const FVector& ShootDirection);
+
+	// 프로젝타일이 무언가에 맞으면 호출되는 함수입니다.
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 };

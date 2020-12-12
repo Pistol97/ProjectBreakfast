@@ -12,6 +12,9 @@ ANPC_Projectile::ANPC_Projectile()
 
 	// 구체를 단순 콜리전 표현으로 사용합니다.
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
+	CollisionComponent->OnComponentHit.AddDynamic(this, &ANPC_Projectile::OnHit);
+
 	// 구체의 콜리전 반경을 설정합니다.
 	CollisionComponent->InitSphereRadius(15.0f);
 	// 루트 컴포넌트를 콜리전 컴포넌트로 설정합니다.
@@ -25,6 +28,9 @@ ANPC_Projectile::ANPC_Projectile()
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Bounciness = 0.3f;
+
+	// 3 초 후 죽습니다.
+	InitialLifeSpan = 3.0f;
 }
 
 // Called when the game starts or when spawned
@@ -45,4 +51,15 @@ void ANPC_Projectile::Tick(float DeltaTime)
 void ANPC_Projectile::FireInDirection(const FVector& ShootDirection)
 {
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+}
+
+// 프로젝타일에 무언가 맞으면 호출되는 함수입니다.
+void ANPC_Projectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+		UE_LOG(LogTemp, Log, TEXT("!!!!!!!!!!!ONHIT!!!!!!!!!!"));
+	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
+	{
+
+		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
+	}
 }
