@@ -20,6 +20,10 @@ class PROJECTBREAKFAST_API AGun : public AActor
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* impact_effect_;
 	UPROPERTY(EditAnywhere)
+	USoundBase* muzzle_sound_;
+	UPROPERTY(EditAnywhere)
+	USoundBase* impact_sound_;
+	UPROPERTY(EditAnywhere)
 	float max_range_ = 10000.0f;
 	UPROPERTY(EditAnywhere)
 	float damage_ = 10.0f;
