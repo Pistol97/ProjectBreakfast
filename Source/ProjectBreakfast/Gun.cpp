@@ -31,6 +31,8 @@ void AGun::PullTriggerEffect()
 {
 	UGameplayStatics::SpawnEmitterAttached(muzzle_flash_,
 		mesh_, TEXT("MuzzleEffect"));
+	UGameplayStatics::SpawnSoundAttached(muzzle_sound_, 
+		mesh_, TEXT("MuzzleEffect"));
 
 	APawn* owner_pawn = Cast<APawn>(GetOwner());
 	if(owner_pawn == nullptr) return;
@@ -48,6 +50,8 @@ void AGun::PullTriggerEffect()
 		ECollisionChannel::ECC_GameTraceChannel1);
 	if (success)
 	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), impact_sound_, hit.Location);
+
 		FVector shot_direction = -rotation.Vector();
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), impact_effect_
 		, hit.Location, shot_direction.Rotation());

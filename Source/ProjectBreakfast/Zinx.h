@@ -9,6 +9,7 @@
 
 class UDamageType;
 class AGun;
+class AStopWatch;
 
 UCLASS()
 class PROJECTBREAKFAST_API AZinx : public ACharacter
@@ -24,10 +25,13 @@ class PROJECTBREAKFAST_API AZinx : public ACharacter
 	bool is_attacking_;
 	UPROPERTY()
 	class UZinxAnimInstance* zinx_anim_;
+	// Shooter Data Variable
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGun> gun_class_;
 	UPROPERTY()
-	AGun* gun_;
+	AGun* gun_;	
+	UPROPERTY(VisibleAnywhere, Category = "Shooting")
+	TSubclassOf<UDamageType> damage_type;
 
 public:
 	// Sets default values for this character's properties
@@ -56,6 +60,24 @@ private:
 	void MoveForward(float input_value);
 	void MoveHorizontal(float input_value);
 	void Fire();
+	void Skill();
+
+	// Related to Zinx Adrenalin Skill Method
+	void MakeTimeSlower(float adrenaline_time_rate);
+	void EndSkill();
+	void GetBackToTheTime();
+	// Related to Zinx Adrenalin Skill Field
+	FTimerHandle slow_handle_;
+	AStopWatch* adrenalin_stop_watch_;
+	AStopWatch* observer_stop_watch_;
+	// Value: 0.0 <= TimeRate <= 1.0
+	const float kAdrenalinTimeRate = 0.2f;
+	const float kStandardTimeRate = 1.0f;
+	const float kAdrenalinMaxTime = 10.0f;
+	const float kDefaultSkillTime = 3.0f;
+	float left_time_ = 0.0f;
+	float default_time_ = 2.0f;
+	bool is_adrenalin_on_ = false;
 
 	// Related to Projection
 	FVector direction_to_move_;
@@ -68,9 +90,6 @@ private:
 	// Zinx Private Value
 	const float kJumpMagnitude = 300.0f;
 
-	// Shooter Data Variable
-	UPROPERTY(VisibleAnywhere, Category = "Shooting")
-	TSubclassOf<UDamageType> damage_type;
 };
 
 USpringArmComponent* AZinx::GetSpringArm() const
