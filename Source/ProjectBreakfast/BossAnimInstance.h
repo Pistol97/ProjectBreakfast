@@ -20,6 +20,8 @@ public:
 	void PlayClusterAttackMontage();
 	void PlayUltimateAttackMontage();
 
+	void SetAimOffset();
+
 	inline UAnimMontage* GetUltimateMontage() const { return ultimate_Attack; }
 private:
 	
