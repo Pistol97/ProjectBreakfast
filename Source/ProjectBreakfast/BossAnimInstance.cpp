@@ -2,6 +2,10 @@
 
 #include "BossAnimInstance.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "BossCharacter.h"
+
 UBossAnimInstance::UBossAnimInstance()
 {
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> PRIMARY_MONTAGE(TEXT
@@ -51,4 +55,13 @@ void UBossAnimInstance::PlayUltimateAttackMontage()
 	{
 		Montage_Play(ultimate_Attack, 1.0f);
 	}
+}
+
+void UBossAnimInstance::SetAimOffset()
+{	
+	FVector playerPos = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation();
+
+	FRotator rot = UKismetMathLibrary::FindLookAtRotation(TryGetPawnOwner()->GetActorLocation(), playerPos);
+
+	TryGetPawnOwner()->GetRootComponent()->SetWorldRotation(rot);
 }
