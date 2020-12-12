@@ -1,7 +1,9 @@
 #include "Zinx.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Runtime\Engine\Classes\Kismet\GameplayStatics.h"
 #include "ZinxAnimInstance.h"
 #include "DrawDebugHelpers.h"
+#include "StopWatch.h"
 #include "Gun.h"
 
 AZinx::AZinx()
@@ -16,6 +18,8 @@ AZinx::AZinx()
 #pragma region Initialize Component on Zinx
 	spring_arm_ = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	camera_ = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
+	adrenalin_stop_watch_ = CreateDefaultSubobject<AStopWatch>(TEXT("STOPWATCH"));
+	observer_stop_watch_ = CreateDefaultSubobject<AStopWatch>(TEXT("OBSERVER"));
 
 	spring_arm_->SetupAttachment((USceneComponent*)GetCapsuleComponent());
 	camera_->SetupAttachment(spring_arm_);
@@ -64,6 +68,9 @@ AZinx::AZinx()
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
 #pragma endregion
 	GetCharacterMovement()->JumpZVelocity = kJumpMagnitude;
+
+	left_time_ = kAdrenalinMaxTime * kAdrenalinTimeRate;
+	default_time_ = kDefaultSkillTime * kAdrenalinTimeRate;
 }
 
 void AZinx::BeginPlay()
@@ -79,6 +86,13 @@ void AZinx::BeginPlay()
 void AZinx::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (observer_stop_watch_->GetAccumulatedTime() * kAdrenalinTimeRate > left_time_)
+	{
+		observer_stop_watch_->Stop();
+		GetBackToTheTime();
+		left_time_ = 0.0f;
+	}
 }
 
 void AZinx::PostInitializeComponents()
@@ -157,9 +171,69 @@ void AZinx::Fire()
 	}
 }
 
+// Adrenalin Skill
+// When player pressed Q button first time, Zinx's adrenalin is going to be invoked.
+// And pressed Q button second time, skill has been ended.
 void AZinx::Skill()
 {
-	this->CustomTimeDilation = 0.4;
+	if (is_adrenalin_on_ == false)
+	{
+		MakeTimeSlower(left_time_);
+	}
+	else 
+	{
+		EndSkill();
+	}
+}
+
+// If this function invoked, time rate have to proceed during 2(or default) seconds.
+// But left_time_ value is smaller than 2.0f, it will proceed during left_time_.
+void AZinx::MakeTimeSlower(float adrenalin_left_time)
+{
+	if (adrenalin_left_time > 0.0f)
+	{
+		is_adrenalin_on_ = true;
+
+		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), kAdrenalinTimeRate);
+		this->CustomTimeDilation = kStandardTimeRate / kAdrenalinTimeRate;
+
+		if (adrenalin_left_time >= default_time_)
+		{
+			adrenalin_stop_watch_->Restart();
+			observer_stop_watch_->Restart();
+		}
+		// Get back to the stadard time when adrenalin left time get 0.0f.
+		// left_time_ < 2.0f
+		else
+		{
+			GetWorldTimerManager().SetTimer(slow_handle_, this, &AZinx::GetBackToTheTime
+			, adrenalin_left_time, false);
+			left_time_ = 0.0f;
+		}
+	}
+}
+
+void AZinx::EndSkill()
+{
+	adrenalin_stop_watch_->Stop();
+	observer_stop_watch_->Stop();
+	if ((adrenalin_stop_watch_->GetAccumulatedTime() * kAdrenalinTimeRate) < static_cast<double>(default_time_))
+	{
+		adrenalin_stop_watch_->Start();
+		observer_stop_watch_->Start();
+	}
+	else
+	{
+		GetBackToTheTime();
+		left_time_ -= (adrenalin_stop_watch_->GetAccumulatedTime() * kAdrenalinTimeRate);
+	}
+}
+
+void AZinx::GetBackToTheTime()
+{
+	is_adrenalin_on_ = false;
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), kStandardTimeRate);
+	this->CustomTimeDilation = kStandardTimeRate;
 }
 
 void AZinx::OnAttackMontageEnded(UAnimMontage* montage, bool is_interrupted)
