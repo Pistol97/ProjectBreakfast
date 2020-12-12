@@ -7,6 +7,7 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "blackboard_keys.h"
 
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 UChasePlayer::UChasePlayer(FObjectInitializer const& object_initializer)
 {
@@ -21,6 +22,11 @@ EBTNodeResult::Type UChasePlayer::ExecuteTask(UBehaviorTreeComponent& owner_comp
 
 	// 플레이어 위치로 이동
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(cont, player_location);
+
+	//APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	//FRotator NewRotation = PlayerPawn->GetActorRotation();
+	//NewRotation.Yaw += 180.f;
+	//cont->SetActorRelativeRotation(NewRotation);
 
 	// 성공
 	FinishLatentTask(owner_comp, EBTNodeResult::Succeeded);

@@ -20,7 +20,7 @@ ANPC_Range_AIController::ANPC_Range_AIController(FObjectInitializer const& objec
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree> obj(TEXT("BehaviorTree'/Game/AI/NPC_Range_BT.NPC_Range_BT'"));
 	if (obj.Succeeded())
 	{
-		btree = obj.Object;
+		btree_range = obj.Object;
 	}
 	behavior_tree_component = object_initializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComp"));
 	blackboard = object_initializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("BlackboardComp"));
@@ -30,8 +30,26 @@ ANPC_Range_AIController::ANPC_Range_AIController(FObjectInitializer const& objec
 void ANPC_Range_AIController::BeginPlay()
 {
 	Super::BeginPlay();
-	RunBehaviorTree(btree);
-	behavior_tree_component->StartTree(*btree);
+	RunBehaviorTree(btree_range);
+	behavior_tree_component->StartTree(*btree_range);
+}
+
+void ANPC_Range_AIController::Tick(float DeltaSeconds)
+{
+	//월드 내의 플레이어 찾기
+	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+	//플레이어를 바라보도록
+	SetFocus(PlayerPawn);
+}
+
+FRotator ANPC_Range_AIController::GetControlRotation() const
+{
+	if (GetPawn() == nullptr)
+	{
+		return FRotator(0.0f, 0.0f, 0.0f);
+	}
+	return FRotator(0.0f, GetPawn()->GetActorRotation().Yaw, 0.0f);
 }
 
 void ANPC_Range_AIController::OnPossess(APawn* const pawn)
@@ -39,7 +57,7 @@ void ANPC_Range_AIController::OnPossess(APawn* const pawn)
 	Super::OnPossess(pawn);
 	if (blackboard)
 	{
-		blackboard->InitializeBlackboard(*btree->BlackboardAsset);
+		blackboard->InitializeBlackboard(*btree_range->BlackboardAsset);
 	}
 }
 
@@ -68,11 +86,11 @@ void ANPC_Range_AIController::setup_perception_system()
 	// 시각관련 객체 생성 & 초기화
 	sight_config = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
 	SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component")));
-	sight_config->SightRadius = 500.0f;//대상을 볼 수 있는 시거리
+	sight_config->SightRadius = 1000.0f;//대상을 볼 수 있는 시거리
 	sight_config->LoseSightRadius = sight_config->SightRadius;//이미 본 대상을 다시 볼 수 있는 시거리
-	sight_config->PeripheralVisionAngleDegrees = 90.0f;//시야각
+	sight_config->PeripheralVisionAngleDegrees = 100.0f;//시야각
 	sight_config->SetMaxAge(2.0f);//잊는데 걸리는 시간
-	sight_config->AutoSuccessRangeFromLastSeenLocation = 600.0f;//잊는데 필요한 거리
+	sight_config->AutoSuccessRangeFromLastSeenLocation = 1300.0f;//잊는데 필요한 거리
 	sight_config->DetectionByAffiliation.bDetectEnemies = true;
 	sight_config->DetectionByAffiliation.bDetectFriendlies = true;
 	sight_config->DetectionByAffiliation.bDetectNeutrals = true;
