@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DimensionExplorerGameMode.h"
 #include "GameFramework/PlayerController.h"
 #include "ZinxController.generated.h"
 
 /**
  * 
  */
+
 UCLASS()
 class PROJECTBREAKFAST_API AZinxController : public APlayerController
 {

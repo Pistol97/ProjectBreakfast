@@ -71,12 +71,16 @@ private:
 	AStopWatch* adrenalin_stop_watch_;
 	AStopWatch* observer_stop_watch_;
 	// Value: 0.0 <= TimeRate <= 1.0
+	// 아드레날린 타임 시간 효율: 1초 = 200ms
 	const float kAdrenalinTimeRate = 0.2f;
+	// 일반 시간 1초 = 1000ms
 	const float kStandardTimeRate = 1.0f;
+	// 아드레날린 스킬 총 시간 몇초
 	const float kAdrenalinMaxTime = 10.0f;
+	// 기본 스킬 지속시간
 	const float kDefaultSkillTime = 3.0f;
 	float left_time_ = 0.0f;
-	float default_time_ = 2.0f;
+	float default_time_ = 3.0f;
 	bool is_adrenalin_on_ = false;
 
 	// Related to Projection
