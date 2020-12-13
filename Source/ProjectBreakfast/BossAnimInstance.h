@@ -19,10 +19,12 @@ public:
 	void PlayPrimaryAttackMontage();
 	void PlayClusterAttackMontage();
 	void PlayUltimateAttackMontage();
+	void PlayDeathMontage();
 
 	void SetAimOffset();
 
 	inline UAnimMontage* GetUltimateMontage() const { return ultimate_Attack; }
+	inline UAnimMontage* GetDeathMontage() const;
 private:
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
@@ -33,5 +35,8 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		UAnimMontage* ultimate_Attack;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+		UAnimMontage* boss_death;
 	
 };
