@@ -29,14 +29,27 @@ public:
 
 	UAnimMontage* get_montage() const;
 
+	float get_health() const;
+	float get_max_health() const;
+	void set_health(float const new_health);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
+	class UWidgetComponent* widget_component;
+	float const max_health = 15.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = true))
+	    float health;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 		APatrolPath* patrol_path;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 		UAnimMontage* montage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
+		UAnimMontage* death_montage;
 };

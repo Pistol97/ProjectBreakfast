@@ -17,7 +17,10 @@ public class ProjectBreakfast : ModuleRules
 			"HeadMountedDisplay",         
 			"AIModule",
 			"GameplayTasks",
-			"NavigationSystem"
+			"NavigationSystem",
+			"UMG",
+			"Slate",
+			"SlateCore"
 		});
 
 		//BuildConfiguration.bUseUnityBuild = false;

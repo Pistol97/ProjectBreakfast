@@ -10,10 +10,15 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Components/WidgetComponent.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Blueprint/UserWidget.h"
+#include "NPC_HealthBar.h"
+
 
 
 // Sets default values
-ANPC::ANPC()
+ANPC::ANPC() : health(max_health), widget_component(CreateDefaultSubobject<UWidgetComponent>(TEXT("NPC_HealthBar")))
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -22,11 +27,43 @@ ANPC::ANPC()
 	bUseControllerRotationYaw = false;
 	//GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	if (widget_component)
+	{
+		widget_component->SetupAttachment(RootComponent);
+		widget_component->SetWidgetSpace(EWidgetSpace::Screen);
+		widget_component->SetRelativeLocation(FVector(0.0f, 0.0f, 70.0f));
+		static ConstructorHelpers::FClassFinder<UUserWidget> widget_class(TEXT("/Game/AI/NPC_HealthBar_BP"));
+		if (widget_class.Succeeded())
+		{
+			widget_component->SetWidgetClass(widget_class.Class);
+		}
+	}
 }
 
 UAnimMontage* ANPC::get_montage() const
 {
 	return montage;
+}
+
+float ANPC::get_health() const
+{
+	return health;
+}
+
+float ANPC::get_max_health() const
+{
+	return max_health;
+}
+
+void ANPC::set_health(float const new_health)
+{
+	health = new_health;
+	if (health <= 0)
+	{
+		PlayAnimMontage(death_montage);
+		UE_LOG(LogTemp, Warning, TEXT("npc died"));
+	}
 }
 
 // Called when the game starts or when spawned
@@ -40,6 +77,12 @@ void ANPC::BeginPlay()
 void ANPC::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	auto const uw = Cast<UNPC_HealthBar>(widget_component->GetUserWidgetObject());
+	if (uw)
+	{
+		uw->set_bar_value_percent(health / max_health);
+	}
 
 }
 
