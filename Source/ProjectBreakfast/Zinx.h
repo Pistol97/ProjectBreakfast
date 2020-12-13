@@ -90,6 +90,10 @@ public:
 	float left_time_ = 0.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Skill)
 	bool is_adrenalin_on_ = false;
+	// 스킬 초당 추가시간
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Skill)
+	float skill_plus_value_ = 0.0f;
+
 	// 징크스 이동속도 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Private)
 	float speed = 0.0f;
