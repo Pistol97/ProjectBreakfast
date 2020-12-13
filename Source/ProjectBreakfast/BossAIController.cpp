@@ -14,6 +14,8 @@ void ABossAIController::BeginPlay()
     {
         RunBehaviorTree(AIBehavior);
     }
+
+    
 }
 
 void ABossAIController::Tick(float DeltaSeconds)

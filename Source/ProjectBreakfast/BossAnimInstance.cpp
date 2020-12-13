@@ -17,6 +17,9 @@ UBossAnimInstance::UBossAnimInstance()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ULTIMATE_MONTAGE(TEXT
 	("/Game/Boss/Animation/Ultimate_Montage.Ultimate_Montage"));
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DEATH_MONTAGE(TEXT
+	("/Game/Boss/Animation/Boss_Death.Boss_Death"));
+
 	if (PRIMARY_MONTAGE.Succeeded())
 	{
 		primary_Attack = PRIMARY_MONTAGE.Object;
@@ -30,6 +33,11 @@ UBossAnimInstance::UBossAnimInstance()
 	if (ULTIMATE_MONTAGE.Succeeded())
 	{
 		ultimate_Attack = ULTIMATE_MONTAGE.Object;
+	}
+
+	if (DEATH_MONTAGE.Succeeded())
+	{
+		boss_death = DEATH_MONTAGE.Object;
 	}
 }
 
@@ -57,6 +65,14 @@ void UBossAnimInstance::PlayUltimateAttackMontage()
 	}
 }
 
+void UBossAnimInstance::PlayDeathMontage()
+{
+	if (!Montage_IsPlaying(boss_death))
+	{
+		Montage_Play(boss_death, 1.0f);
+	}
+}
+
 void UBossAnimInstance::SetAimOffset()
 {	
 	FVector playerPos = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation();
@@ -64,4 +80,9 @@ void UBossAnimInstance::SetAimOffset()
 	FRotator rot = UKismetMathLibrary::FindLookAtRotation(TryGetPawnOwner()->GetActorLocation(), playerPos);
 
 	TryGetPawnOwner()->GetRootComponent()->SetWorldRotation(rot);
+}
+
+inline UAnimMontage* UBossAnimInstance::GetDeathMontage() const
+{
+	return boss_death;
 }
