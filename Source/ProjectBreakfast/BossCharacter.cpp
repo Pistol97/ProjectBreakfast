@@ -8,6 +8,7 @@
 #include "BossProjectile.h"
 #include "BossAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Zinx.h"
 
 #include <iostream>
 
@@ -98,7 +99,7 @@ void ABossCharacter::FireLaserBeam()
 	FVector ultimatePos = GetMesh()->GetSocketLocation("Muzzle_04");
 	FRotator ultimateRot = GetMesh()->GetForwardVector().Rotation();
 
-	ultimateRot.Roll += 7;
+	ultimateRot.Roll += 13;
 
 	AActor* ultimate_laser1 = GetWorld()->SpawnActor<AActor>(ultimate_Laser, ultimatePos, ultimateRot);
 	ultimate_laser1->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, false));
@@ -165,9 +166,32 @@ void ABossCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	AZinx* zinx = Cast<AZinx>(PlayerPawn);
+	if (bossAnimInstance->Montage_IsPlaying(bossAnimInstance->GetUltimateMontage()))
+	{
+		if (zinx->is_adrenalin_on_)
+		{
+			speed += 1.0f * zinx->kAdrenalinTimeRate;
+		}
 
-	//플레이어 조준
-	bossAnimInstance->SetAimOffset();
+		else
+		{
+			speed += 1.0f;
+		}
+
+		FRotator rot = FRotator(0.0f, speed, 0.0f);
+		SetActorRotation(rot);
+		UE_LOG(LogTemp, Warning, TEXT("TEST"));
+	}
+
+	else
+	{
+		speed = 0.0f;
+		//플레이어 조준
+		bossAnimInstance->SetAimOffset();
+	}
+
+
 
 	bossAI->GetBlackboardComponent()->SetValueAsFloat("BossHP", current_HP / max_HP * 100.0f);
 

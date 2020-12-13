@@ -61,4 +61,6 @@ private:
 		float current_HP;
 
 	const float max_HP = 100.0f;
+
+	float speed = 0.0f;
 };
