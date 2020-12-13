@@ -59,8 +59,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Statistic, Meta = (AllowPrivateAccess = true))
 		float current_HP;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Statistic, Meta = (AllowPrivateAccess = true))
+		float max_HP = 500.0f;
 
-	const float max_HP = 100.0f;
-
-	float speed = 0.0f;
+	float speed;
 };

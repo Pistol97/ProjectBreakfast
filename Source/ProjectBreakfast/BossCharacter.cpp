@@ -19,6 +19,8 @@ ABossCharacter::ABossCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	current_HP = max_HP;
+
+	speed = 0.0f;
 }
 
 void ABossCharacter::PrimaryAttack()
@@ -35,6 +37,7 @@ void ABossCharacter::PrimaryAttack()
 
 		//플레이어에 맞춰 조정
 		primaryRot.Pitch -= 5.0f;
+		primaryRot.Yaw -= 4.0f;
 
 		ABossProjectile* projectile_primary = GetWorld()->SpawnActor<ABossProjectile>(projectile_Primary, primaryPos, primaryRot);
 
