@@ -19,6 +19,8 @@ ABossCharacter::ABossCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	current_HP = max_HP;
+
+	speed = 0.0f;
 }
 
 void ABossCharacter::PrimaryAttack()
