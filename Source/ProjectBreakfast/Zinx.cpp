@@ -73,12 +73,13 @@ AZinx::AZinx()
 	GetCharacterMovement()->JumpZVelocity = kJumpMagnitude;
 
 	left_time_ = kAdrenalinMaxTime * kAdrenalinTimeRate;
-	default_time_ = kDefaultSkillTime * kAdrenalinTimeRate;
 }
 
 void AZinx::BeginPlay()
 {
 	Super::BeginPlay();
+
+	default_time_ = kDefaultSkillTime * kAdrenalinTimeRate;
 
 	gun_ = GetWorld()->SpawnActor<AGun>(gun_class_);
 	gun_->SetOwner(this);
@@ -89,13 +90,6 @@ void AZinx::BeginPlay()
 void AZinx::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (observer_stop_watch_->GetAccumulatedTime() * kAdrenalinTimeRate > left_time_)
-	{
-		observer_stop_watch_->Stop();
-		GetBackToTheTime();
-		left_time_ = 0.0f;
-	}
 }
 
 void AZinx::PostInitializeComponents()
@@ -144,7 +138,7 @@ void AZinx::MoveForward(float input_value)
 		const FRotator kYawRotation(0, kRotation.Yaw, 0);
 
 		const FVector kDirection = FRotationMatrix(kYawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(kDirection, input_value);
+		AddMovementInput(kDirection, input_value * speed);
 	}
 }
 
@@ -156,7 +150,7 @@ void AZinx::MoveHorizontal(float input_value)
 		const FRotator kYawRotation(0, kRotation.Yaw, 0);
 
 		const FVector kDirection = FRotationMatrix(kYawRotation).GetUnitAxis(EAxis::Y);
-		AddMovementInput(kDirection, input_value);
+		AddMovementInput(kDirection, input_value * speed);
 	}
 }
 
@@ -237,6 +231,13 @@ void AZinx::GetBackToTheTime()
 	is_adrenalin_on_ = false;
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), kStandardTimeRate);
 	this->CustomTimeDilation = kStandardTimeRate;
+}
+
+void AZinx::ForceGetBackToTheTime()
+{
+	observer_stop_watch_->Stop();
+	left_time_ = 0.0f;
+	GetBackToTheTime();
 }
 
 void AZinx::OnAttackMontageEnded(UAnimMontage* montage, bool is_interrupted)
