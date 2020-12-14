@@ -86,11 +86,11 @@ void ANPC_Range_AIController::setup_perception_system()
 	// 시각관련 객체 생성 & 초기화
 	sight_config = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
 	SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component")));
-	sight_config->SightRadius = 800.0f;//대상을 볼 수 있는 시거리
+	sight_config->SightRadius = 1600.0f;//대상을 볼 수 있는 시거리
 	sight_config->LoseSightRadius = sight_config->SightRadius;//이미 본 대상을 다시 볼 수 있는 시거리
 	sight_config->PeripheralVisionAngleDegrees = 100.0f;//시야각
 	sight_config->SetMaxAge(2.0f);//잊는데 걸리는 시간
-	sight_config->AutoSuccessRangeFromLastSeenLocation = 800.0f;//잊는데 필요한 거리
+	sight_config->AutoSuccessRangeFromLastSeenLocation = 1600.0f;//잊는데 필요한 거리
 	sight_config->DetectionByAffiliation.bDetectEnemies = true;
 	sight_config->DetectionByAffiliation.bDetectFriendlies = true;
 	sight_config->DetectionByAffiliation.bDetectNeutrals = true;
