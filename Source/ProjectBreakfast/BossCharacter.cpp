@@ -205,6 +205,5 @@ void ABossCharacter::Tick(float DeltaTime)
 void ABossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 

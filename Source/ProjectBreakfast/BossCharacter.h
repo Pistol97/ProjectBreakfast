@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "BossCharacter.generated.h"
 
+class UBossAnimInstance;
+class ABossAIController;
+
 UCLASS()
 class PROJECTBREAKFAST_API ABossCharacter : public ACharacter
 {
@@ -53,8 +56,8 @@ public:
 		TSubclassOf<class AActor> ultimate_Laser;
 
 private:
-	class UBossAnimInstance* bossAnimInstance;
-	class ABossAIController* bossAI;
+	UBossAnimInstance* bossAnimInstance;
+	ABossAIController* bossAI;
 
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Statistic, Meta = (AllowPrivateAccess = true))
