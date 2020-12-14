@@ -102,7 +102,7 @@ void ABossCharacter::FireLaserBeam()
 	FVector ultimatePos = GetMesh()->GetSocketLocation("Muzzle_04");
 	FRotator ultimateRot = GetMesh()->GetForwardVector().Rotation();
 
-	ultimateRot.Roll += 13;
+	ultimateRot.Roll += 7;
 
 	AActor* ultimate_laser1 = GetWorld()->SpawnActor<AActor>(ultimate_Laser, ultimatePos, ultimateRot);
 	ultimate_laser1->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, false));

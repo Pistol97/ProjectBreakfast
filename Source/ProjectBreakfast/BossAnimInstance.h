@@ -23,8 +23,8 @@ public:
 
 	void SetAimOffset();
 
-	inline UAnimMontage* GetUltimateMontage() const { return ultimate_Attack; }
-	inline UAnimMontage* GetDeathMontage() const;
+	inline UAnimMontage* GetUltimateMontage() { return ultimate_Attack; }
+	inline UAnimMontage* GetDeathMontage() { return boss_death; }
 private:
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))

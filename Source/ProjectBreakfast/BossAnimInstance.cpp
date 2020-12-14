@@ -81,8 +81,3 @@ void UBossAnimInstance::SetAimOffset()
 
 	TryGetPawnOwner()->GetRootComponent()->SetWorldRotation(rot);
 }
-
-inline UAnimMontage* UBossAnimInstance::GetDeathMontage() const
-{
-	return boss_death;
-}
