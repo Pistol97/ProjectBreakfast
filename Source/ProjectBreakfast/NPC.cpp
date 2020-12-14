@@ -41,6 +41,8 @@ ANPC::ANPC() : health(max_health), widget_component(CreateDefaultSubobject<UWidg
 			widget_component->SetVisibility(false);
 		}
 	}
+
+	widget_component->SetActive(false);
 }
 
 UAnimMontage* ANPC::get_montage() const
