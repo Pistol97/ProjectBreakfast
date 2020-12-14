@@ -20,6 +20,8 @@
 #include "Blueprint/UserWidget.h"
 #include "NPC_HealthBar.h"
 
+#include "NPC_Range_AIController.h"
+
 // Sets default values
 ANPC_ranged::ANPC_ranged() : health(max_health), widget_component(CreateDefaultSubobject<UWidgetComponent>(TEXT("NPC_HealthBar")))
 {
@@ -38,8 +40,11 @@ ANPC_ranged::ANPC_ranged() : health(max_health), widget_component(CreateDefaultS
 		if (widget_class.Succeeded())
 		{
 			widget_component->SetWidgetClass(widget_class.Class);
+			widget_component->SetVisibility(false);
 		}
 	}
+
+	widget_component->SetVisibility(false);
 }
 
 UAnimMontage* ANPC_ranged::get_montage() const
@@ -82,6 +87,15 @@ void ANPC_ranged::Tick(float DeltaTime)
 	if (uw)
 	{
 		uw->set_bar_value_percent(health / max_health);
+	}
+
+	widget_component->SetVisibility(false);
+
+	APawn* player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	
+	if (this->GetDistanceTo(player) < 1000)
+	{
+		widget_component->SetVisibility(true);
 	}
 }
 

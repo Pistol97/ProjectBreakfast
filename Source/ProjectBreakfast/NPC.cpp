@@ -9,6 +9,7 @@
 #include "GameFramework/PlayerController.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 #include "Components/WidgetComponent.h"
 #include "UObject/ConstructorHelpers.h"
@@ -37,6 +38,7 @@ ANPC::ANPC() : health(max_health), widget_component(CreateDefaultSubobject<UWidg
 		if (widget_class.Succeeded())
 		{
 			widget_component->SetWidgetClass(widget_class.Class);
+			widget_component->SetVisibility(false);
 		}
 	}
 }
@@ -82,6 +84,15 @@ void ANPC::Tick(float DeltaTime)
 	if (uw)
 	{
 		uw->set_bar_value_percent(health / max_health);
+	}
+
+	widget_component->SetVisibility(false);
+
+	APawn* player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+	if (this->GetDistanceTo(player) < 1000)
+	{
+		widget_component->SetVisibility(true);
 	}
 
 }
