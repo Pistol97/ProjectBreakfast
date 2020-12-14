@@ -39,6 +39,8 @@ ANPC::ANPC() : health(max_health), widget_component(CreateDefaultSubobject<UWidg
 			widget_component->SetWidgetClass(widget_class.Class);
 		}
 	}
+
+	widget_component->SetActive(false);
 }
 
 UAnimMontage* ANPC::get_montage() const
