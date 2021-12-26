@@ -15,13 +15,12 @@ class PROJECTBREAKFAST_API ABossAIController : public AAIController
 	GENERATED_BODY()
 
 public:
+	ABossAIController();
 	virtual void Tick(float DeltaSeconds) override;
 
 protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(EditAnywhere)
-		class UBehaviorTree* AIBehavior;
-
+	class UBehaviorTree* AIBehavior;
 };

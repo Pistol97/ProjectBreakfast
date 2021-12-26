@@ -5,17 +5,27 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "UObject/ConstructorHelpers.h"
+
+ABossAIController::ABossAIController()
+{
+    const ConstructorHelpers::FObjectFinder<UBehaviorTree> behaviorTree(TEXT
+    ("/Game/Boss/AI/BT_BossAI.BT_BossAI"));
+    
+    if(behaviorTree.Succeeded())
+    {
+        AIBehavior = behaviorTree.Object;
+    }
+}
 
 void ABossAIController::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     if (AIBehavior != nullptr)
     {
         RunBehaviorTree(AIBehavior);
     }
-
-    
 }
 
 void ABossAIController::Tick(float DeltaSeconds)

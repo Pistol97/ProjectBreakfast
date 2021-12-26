@@ -8,6 +8,7 @@
 
 class UBossAnimInstance;
 class ABossAIController;
+class UBlackboardComponent;
 
 UCLASS()
 class PROJECTBREAKFAST_API ABossCharacter : public ACharacter
@@ -57,8 +58,7 @@ public:
 
 private:
 	UBossAnimInstance* bossAnimInstance;
-	ABossAIController* bossAI;
-
+	UBlackboardComponent* _bossBlackBoard;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Statistic, Meta = (AllowPrivateAccess = true))
 		float current_HP;

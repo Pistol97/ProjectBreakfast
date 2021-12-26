@@ -4,6 +4,7 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "UObject/ConstructorHelpers.h"
 #include "BossCharacter.h"
 
 UBossAnimInstance::UBossAnimInstance()

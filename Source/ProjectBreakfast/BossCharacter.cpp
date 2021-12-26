@@ -8,6 +8,8 @@
 #include "BossProjectile.h"
 #include "BossAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Zinx.h"
 
 #include <iostream>
@@ -18,8 +20,12 @@ ABossCharacter::ABossCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	current_HP = max_HP;
+	const ConstructorHelpers::FClassFinder<ABossAIController> bossAIController(TEXT
+	("/Script/ProjectBreakfast.BossAIController"));
 
+	AIControllerClass = bossAIController.Class;
+
+	current_HP = max_HP;
 	speed = 0.0f;
 }
 
@@ -27,15 +33,15 @@ void ABossCharacter::PrimaryAttack()
 {
 	FVector primaryPos = GetMesh()->GetSocketLocation("Muzzle_01");
 	FRotator primaryRot = GetMesh()->GetSocketRotation("Muzzle_01");
-
+	
 	if (bossAnimInstance != NULL)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Boss Primary Attack"));
 
-		//¾Ö´Ï¸ÞÀÌ¼Ç Àç»ý
+		//ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½
 		bossAnimInstance->PlayPrimaryAttackMontage();
 
-		//ÇÃ·¹ÀÌ¾î¿¡ ¸ÂÃç Á¶Á¤
+		//ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		primaryRot.Pitch -= 5.0f;
 		primaryRot.Yaw -= 4.0f;
 
@@ -55,7 +61,7 @@ void ABossCharacter::ClusterAttack()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Boss Cluster Attack"));
 
-		//¾Ö´Ï¸ÞÀÌ¼Ç Àç»ý
+		//ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½
 		bossAnimInstance->PlayClusterAttackMontage();
 	}
 }
@@ -87,11 +93,11 @@ void ABossCharacter::UltimateAttack()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Boss First Ultimate Attack"));
 
-		//¾Ö´Ï¸ÞÀÌ¼Ç Àç»ý
+		//ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½
 		bossAnimInstance->PlayUltimateAttackMontage();
 	}
-
-	if (bossAI->GetBlackboardComponent()->GetValueAsBool("SecondSequenceUlt"))
+	
+	if (_bossBlackBoard->GetValueAsBool("SecondSequenceUlt"))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Boss Last Ultimate Attack"));
 	}
@@ -122,16 +128,16 @@ void ABossCharacter::FireLaserBeam()
 
 void ABossCharacter::NextSequence()
 {
-	if (bossAI->GetBlackboardComponent()->GetValueAsBool("SecondSequenceUlt"))
+	if (_bossBlackBoard->GetValueAsBool("SecondSequenceUlt"))
 	{
-		bossAI->GetBlackboardComponent()->SetValueAsBool("SecondSequenceUlt", false);
+		_bossBlackBoard->SetValueAsBool("SecondSequenceUlt", false);
 	}
 
 
 	else
 	{
-		bossAI->GetBlackboardComponent()->SetValueAsBool("FirstSequenceUlt", false);
-		bossAI->GetBlackboardComponent()->SetValueAsBool("SecondSequenceUlt", true);
+		_bossBlackBoard->SetValueAsBool("FirstSequenceUlt", false);
+		_bossBlackBoard->SetValueAsBool("SecondSequenceUlt", true);
 	}
 }
 
@@ -141,7 +147,7 @@ void ABossCharacter::BossDeath()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Boss Dead!"));
 
-		//¾Ö´Ï¸ÞÀÌ¼Ç Àç»ý
+		//ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½
 		bossAnimInstance->PlayDeathMontage();
 	}
 
@@ -157,10 +163,11 @@ void ABossCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	bossAnimInstance = Cast<UBossAnimInstance>(GetMesh()->GetAnimInstance());
-	bossAI = Cast<ABossAIController>(GetController());
 
-	bossAI->GetBlackboardComponent()->SetValueAsBool("FirstSequenceUlt", true);
-	bossAI->GetBlackboardComponent()->SetValueAsBool("SecondSequenceUlt", false);
+	_bossBlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(GetOwner());
+
+	_bossBlackBoard->SetValueAsBool("FirstSequenceUlt", true);
+	_bossBlackBoard->SetValueAsBool("SecondSequenceUlt", false);
 }
 
 // Called every frame
@@ -184,21 +191,20 @@ void ABossCharacter::Tick(float DeltaTime)
 
 		FRotator rot = FRotator(0.0f, speed, 0.0f);
 		SetActorRotation(rot);
-		UE_LOG(LogTemp, Warning, TEXT("TEST"));
 	}
 
 	else
 	{
 		speed = 0.0f;
-		//ÇÃ·¹ÀÌ¾î Á¶ÁØ
+		//ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½
 		bossAnimInstance->SetAimOffset();
 	}
 
 
 
-	bossAI->GetBlackboardComponent()->SetValueAsFloat("BossHP", current_HP / max_HP * 100.0f);
+	_bossBlackBoard->SetValueAsFloat("BossHP", current_HP / max_HP * 100.0f);
 
-	UE_LOG(LogTemp, Warning, TEXT("%f"), bossAI->GetBlackboardComponent()->GetValueAsFloat("BossHP"));
+	UE_LOG(LogTemp, Warning, TEXT("%f"), _bossBlackBoard->GetValueAsFloat("BossHP"));
 }
 
 // Called to bind functionality to input
